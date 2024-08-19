@@ -15,9 +15,9 @@ def generate_ticket_response(ticket_details):
     prompt = f"""
     You are a helpful support agent. Here's a ticket:
     Subject: {ticket_details['subject']}
-    Created at: {ticket_details['created_at']}
     Customer: {ticket_details['customer_name']}
-    Issue: {ticket_details['issue']}
+    Body: {ticket_details['body']}
+    Agent Name: {ticket_details['agent']}
     
     Suggest a helpful response.
     """
@@ -25,3 +25,18 @@ def generate_ticket_response(ticket_details):
     # Use OpenAIClient to generate the response
     ai_response = ai_client.generate_response(prompt)
     return ai_response
+
+def extract_relevant_response(ai_response):
+    # Find the position of the "Re" part (or any specific part you want)
+    start_index = ai_response.find("Re")
+    
+    # If found, extract the relevant portion; otherwise, return the full response
+    if start_index != -1:
+        relevant_response = ai_response[start_index:]
+    else:
+        relevant_response = ai_response  # Or handle it differently based on your needs
+    
+    # Construct the dictionary with the relevant part
+    response_dict = {"suggested_response": relevant_response}
+    
+    return response_dict
